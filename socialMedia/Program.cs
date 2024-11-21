@@ -3,7 +3,6 @@ using socialMedia.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDb>(options =>
 {
@@ -34,6 +33,4 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
      .WithStaticAssets();
-
-//app.Urls.Add("http://127.0.0.1:5326");
 app.Run();
