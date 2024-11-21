@@ -23,15 +23,14 @@ public class UserService
     }
     public async Task<string?> Login(LoginInfo info) {
         var hash = Convert.ToBase64String(SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(info.Password)));
-        if (await _db.Users.AnyAsync(user => user.Username == info.Username && user.Password == hash)) {
-            try {
+        try {
+            if (await _db.Users.AnyAsync(user => user.Username == info.Username && user.Password == hash))
                 return _tokenService.GenerateToken(info.Username);
-            }catch (Exception e) {
-                Console.WriteLine(e);
-                return null;
-            }
+            return string.Empty;
+        }catch (Exception e) {
+            Console.WriteLine(e);
+            return null;
         }
-        return null;
     }
 
     public async Task<Response> CreateUser(User user) {
@@ -62,4 +61,5 @@ public class UserService
             return Response.Error;
         }
     }
+    
 }

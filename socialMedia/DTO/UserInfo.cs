@@ -1,6 +1,6 @@
 ﻿namespace socialMedia.Models;
 
-public class LikeInfo
+public class UserInfo
 {
     public string Username { get; set; }
     public string Firstname { get; set; }

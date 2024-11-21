@@ -51,28 +51,28 @@ public class FollowService {
         
     }
 
-    public async Task<List<string>?> GetFollowing(string username) {
+    public async Task<List<UserInfo>?> GetFollowing(string username) {
         try {
             var following = await _db.Follows.
                 Where(f => f.Username == username)
                 .Select(f => f.Following)
                 .Take(50)
                 .ToListAsync();
-            return following;
+            return await Utils.Utils.GetUsersInfo(following,_db);
         }
         catch (Exception e) {
             Console.WriteLine(e);
             return null;
         }
     }
-    public async Task<List<string>?> GetFollowers(string username) {
+    public async Task<List<UserInfo>?> GetFollowers(string username) {
         try {
             var followers = await _db.Follows
                 .Where(f => f.Following == username)
                 .Select(f => f.Username)
                 .Take(50)
                 .ToListAsync();
-            return followers;
+            return await Utils.Utils.GetUsersInfo(followers,_db);
         }
         catch (Exception e) {
             Console.WriteLine(e);

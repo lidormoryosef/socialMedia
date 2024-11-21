@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using socialMedia.Data;
 using socialMedia.Models;
+using socialMedia.Utils;
 
 namespace socialMedia.Service;
 
@@ -56,25 +57,14 @@ public class LikeService
         }
     }
 
-    public async Task<List<LikeInfo>?> GetLikesForPost(int postId)
+    public async Task<List<UserInfo>?> GetLikesForPost(int postId)
     {
         try {
             var usernames = await _db.LikesToPost
                 .Where( l =>l.IdPost == postId)
                 .Select( l => l.Username)
                 .ToListAsync();
-            if (usernames.Any())
-                return [];
-            var likeInfo = await _db.Users.
-                Where(user => usernames.Contains(user.Username))
-                .Select(user => new LikeInfo()
-                {
-                    Username = user.Username,
-                    Firstname = user.Firstname,
-                    Lastname = user.Lastname,
-                    ImageUrl = user.ImageUrl
-                }).ToListAsync();
-            return likeInfo;
+            return await Utils.Utils.GetUsersInfo(usernames,_db);
         }
         catch (Exception e) {
             Console.WriteLine(e);
@@ -123,23 +113,14 @@ public class LikeService
         }
     }
 
-    public async Task<List<LikeInfo>?> GetLikesForComment(int commentId)
+    public async Task<List<UserInfo>?> GetLikesForComment(int commentId)
     {
         try {
             var usernames = await _db.LikesToComment
                 .Where( l =>l.IdComment == commentId)
                 .Select( l => l.Username)
                 .ToListAsync();
-            var likeInfo = await _db.Users.
-                Where(user => usernames.Contains(user.Username))
-                .Select(user => new LikeInfo()
-                {
-                    Username = user.Username,
-                    Firstname = user.Firstname,
-                    Lastname = user.Lastname,
-                    ImageUrl = user.ImageUrl
-                }).ToListAsync();
-            return likeInfo;
+            return await Utils.Utils.GetUsersInfo(usernames,_db);
         }
         catch (Exception e) {
             Console.WriteLine(e);

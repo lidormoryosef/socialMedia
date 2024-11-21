@@ -18,10 +18,11 @@ public class UserController : Controller
         if (string.IsNullOrEmpty(info.Username) || string.IsNullOrEmpty(info.Password)) {
             return BadRequest("Username or password are required");
         }
-        var token = await _userService.Login(info);
-        if (token is null) {
+        string? token = await _userService.Login(info);
+        if (token is null) 
+            return StatusCode(500,"Internal Server Error");
+        if (token.Length == 0) 
             return BadRequest("Invalid username or password");
-        }
         return Ok(token);
     }
     [HttpPost("register")]
